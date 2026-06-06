@@ -59,3 +59,20 @@ See [`.claude/skills/custom-api-usage-analyze/SKILL.md`](.claude/skills/custom-a
 ## License
 
 MIT
+
+## Manual Integration Tests
+
+After installing the extension in VSCode (`code --install-extension custom-api-usage-0.1.0.vsix` and reload window), verify these scenarios:
+
+| # | Scenario | Expected |
+|---|---|---|
+| 1 | First run, no providers | Status bar: empty (or "🔑 Add a provider" hint if implemented) |
+| 2 | Run **Add Provider** for any real API | Status bar shows `⚠️ <label>: Needs analyze` |
+| 3 | Run `/custom-api-usage-analyze <id>` in Claude Code | Mapping written, status bar updates to `⚡ <label> 45% (2h30m)` |
+| 4 | Add 2nd provider, run skill | Both status bar items visible, in `display.order` order |
+| 5 | Run **Export Mappings** | `mappings.json` content visible in clipboard |
+| 6 | Run **Import Mappings** with that clipboard | Toast: "N provider(s) imported" |
+| 7 | Provider's API goes down | Status bar shows `⚠️ <label>: Error`; other providers unaffected |
+| 8 | Edit `mappings.json` while VSCode is open | Reload on next refresh interval (or manually trigger **Refresh**) |
+| 9 | Run **Remove Provider** | Status bar item disappears, secret deleted |
+| 10 | Run **Reorder Providers** | Status bar items swap order |
