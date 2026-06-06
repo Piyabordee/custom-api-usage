@@ -15,7 +15,7 @@
     "url": "https://github.com/Piyabordee/custom-api-usage"
   },
   "scripts": {
-    "test": "node --test test/",
+    "test": "node --test test/*.test.js",
     "package": "vsce package"
   },
   "dependencies": {
