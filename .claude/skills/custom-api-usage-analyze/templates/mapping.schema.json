@@ -1,0 +1,67 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Custom API Usage — Mapping Config",
+  "description": "Schema for ~/.custom-api-usage/mappings.json",
+  "type": "object",
+  "required": ["version", "providers"],
+  "properties": {
+    "version": { "const": 1 },
+    "providers": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "label", "url", "method", "headers", "mapping", "display", "refreshIntervalMinutes"],
+        "properties": {
+          "id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]*$" },
+          "label": { "type": "string", "minLength": 1 },
+          "url": { "type": "string", "format": "uri" },
+          "method": { "type": "string", "enum": ["GET", "POST", "PUT", "PATCH", "DELETE"] },
+          "headers": { "type": "object", "additionalProperties": { "type": "string" } },
+          "mapping": {
+            "type": ["object", "null"],
+            "properties": {
+              "used":      { "$ref": "#/definitions/field" },
+              "total":     { "$ref": "#/definitions/field" },
+              "percent":   { "$ref": "#/definitions/percentField" },
+              "resetTime": { "$ref": "#/definitions/resetTimeField" }
+            }
+          },
+          "display": {
+            "type": "object",
+            "properties": {
+              "order": { "type": "integer", "minimum": 1 },
+              "showPercent": { "type": "boolean" },
+              "showTimeLeft": { "type": "boolean" }
+            }
+          },
+          "refreshIntervalMinutes": { "type": "integer", "minimum": 1, "maximum": 60 }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "field": {
+      "type": "object",
+      "required": ["path"],
+      "properties": {
+        "path": { "type": "string", "minLength": 1 }
+      }
+    },
+    "percentField": {
+      "type": "object",
+      "required": ["path"],
+      "properties": {
+        "path": { "type": "string", "minLength": 1 },
+        "invert": { "type": "boolean" }
+      }
+    },
+    "resetTimeField": {
+      "type": "object",
+      "required": ["path"],
+      "properties": {
+        "path": { "type": "string", "minLength": 1 },
+        "unit": { "type": "string", "enum": ["ms", "s"] }
+      }
+    }
+  }
+}
