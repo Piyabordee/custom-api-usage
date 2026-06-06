@@ -1,0 +1,7 @@
+node_modules/**
+.vscode/**
+.gitignore
+.vscodeignore
+test/**
+docs/superpowers/plans/**
+*.log
