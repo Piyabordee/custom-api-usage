@@ -1,0 +1,39 @@
+{
+  "name": "custom-api-usage",
+  "displayName": "Custom API Usage",
+  "description": "Display token/quota usage from any JSON API in the VSCode status bar",
+  "version": "0.1.0",
+  "publisher": "custom-api-usage",
+  "license": "MIT",
+  "engines": { "vscode": "^1.85.0" },
+  "categories": ["Other"],
+  "keywords": ["usage", "quota", "token plan", "status bar", "api", "jsonpath"],
+  "activationEvents": ["onStartupFinished"],
+  "main": "./extension/extension.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Piyabordee/custom-api-usage"
+  },
+  "scripts": {
+    "test": "node --test test/",
+    "package": "vsce package"
+  },
+  "dependencies": {
+    "jsonpath-plus": "^10.0.0"
+  },
+  "devDependencies": {
+    "@vscode/vsce": "^3.0.0"
+  },
+  "contributes": {
+    "commands": [
+      { "command": "customApiUsage.addProvider",      "title": "Custom API Usage: Add Provider" },
+      { "command": "customApiUsage.setApiKey",        "title": "Custom API Usage: Set API Key" },
+      { "command": "customApiUsage.refresh",          "title": "Custom API Usage: Refresh" },
+      { "command": "customApiUsage.showDetails",      "title": "Custom API Usage: Show Details" },
+      { "command": "customApiUsage.reorderProviders", "title": "Custom API Usage: Reorder Providers" },
+      { "command": "customApiUsage.removeProvider",   "title": "Custom API Usage: Remove Provider" },
+      { "command": "customApiUsage.exportMappings",   "title": "Custom API Usage: Export Mappings" },
+      { "command": "customApiUsage.importMappings",   "title": "Custom API Usage: Import Mappings" }
+    ]
+  }
+}
