@@ -1,6 +1,7 @@
 const vscode = require('vscode');
 const path = require('node:path');
 const os = require('node:os');
+const fs = require('node:fs');
 const providers = require('./providers');
 const { fetchAndCache, extract, renderStatusBar } = require('./fetcher');
 const { installSkill } = require('./skill-installer');
@@ -121,6 +122,17 @@ async function refreshOne(context, provider) {
 
   // Check if mapping exists
   if (!provider.mapping || !provider.mapping.used) {
+    // If raw cache is also missing, try to populate it now so the skill
+    // has data to analyze the next time the user runs it.
+    const rawPath = path.join(CUSTOM_DIR, 'raw', `${provider.id}.json`);
+    if (!fs.existsSync(rawPath)) {
+      try {
+        await fetchAndCache(provider, CUSTOM_DIR, (id) => providers.getApiKey(id));
+      } catch {
+        // Silently swallow — we still want to show "Needs analyze" so the user
+        // knows the next step is the skill, not debugging the fetch.
+      }
+    }
     item.text = `$(warning) ${provider.label || provider.id}: Needs analyze`;
     item.color = new vscode.ThemeColor('statusBarItem.warningForeground');
     item.backgroundColor = new vscode.ThemeColor('statusBarItem.warningBackground');
