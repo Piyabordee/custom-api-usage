@@ -4,6 +4,7 @@ const os = require('node:os');
 const providers = require('./providers');
 const { fetchAndCache, extract, renderStatusBar } = require('./fetcher');
 const { installSkill } = require('./skill-installer');
+const { primeRawCache } = require('./raw-cache');
 
 const CUSTOM_DIR = path.join(os.homedir(), '.custom-api-usage');
 const PREFIX = 'customApiUsage';
@@ -310,10 +311,29 @@ ${cards}
       providers.add(CUSTOM_DIR, { id, label: label.trim(), url: url.trim() });
       await providers.setApiKey(id, key.trim());
 
+      // Prime raw cache so the skill has something to analyze.
+      // Best-effort: if the network is down or auth is wrong, we still want
+      // the provider to be saved and surfaced as "Needs analyze".
+      const primeResult = await primeRawCache({
+        provider: { id, label: label.trim(), url: url.trim(), method: 'GET', headers: { Authorization: `Bearer ${key.trim()}` } },
+        customDir: CUSTOM_DIR,
+        getApiKey: (pid) => providers.getApiKey(pid),
+        fetchAndCache
+      });
+      if (!primeResult.ok) {
+        vscode.window.showWarningMessage(
+          `custom-api-usage: provider "${label}" added, but first fetch failed: ${primeResult.error}. ` +
+          `Use Refresh to retry after fixing credentials.`
+        );
+      }
+
       // Try to fetch raw so the skill has something to analyze
       vscode.window.showInformationMessage(
-        `custom-api-usage: provider "${label}" added. ` +
-        `Now run /custom-api-usage-analyze ${id} in Claude Code to generate the mapping.`
+        primeResult.ok
+          ? `custom-api-usage: provider "${label}" added. ` +
+            `Now run /custom-api-usage-analyze ${id} in Claude Code to generate the mapping.`
+          : `custom-api-usage: provider "${label}" added, but raw fetch failed. ` +
+            `Fix credentials and Refresh, then run /custom-api-usage-analyze ${id}.`
       );
 
       await rebuildFromDisk(context);
