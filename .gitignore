@@ -1,6 +1,64 @@
+# ─── Node / npm ───────────────────────────────────────────────────────────
 node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# ─── Build / packaging artifacts ──────────────────────────────────────────
 *.vsix
-.DS_Store
-*.log
+*.tgz
+out/
+dist/
+build/
+
+# ─── Test / coverage ───────────────────────────────────────────────────────
+coverage/
+.nyc_output/
+*.lcov
 .vscode-test/
+
+# ─── Environment / secrets (defense in depth — SecretStorage is the primary)
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+*.jks
+id_rsa*
+id_dsa*
+id_ed25519*
+credentials.json
+*.keystore
+
+# ─── OS / editor noise ─────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+desktop.ini
 .vscode/
+.idea/
+*.swp
+*.swo
+*~
+*.sublime-project
+*.sublime-workspace
+
+# ─── Logs ──────────────────────────────────────────────────────────────────
+*.log
+logs/
+
+# ─── Misc ──────────────────────────────────────────────────────────────────
+.cache/
+.tmp/
+tmp/
+*.tsbuildinfo
+.eslintcache
+.stylelintcache
+.parcel-cache/
+
+# ─── Project-specific: never commit user-level runtime state ───────────────
+# (these live in ~/.custom-api-usage/ outside the repo, but keep as safety net)
+mappings.json
+raw/

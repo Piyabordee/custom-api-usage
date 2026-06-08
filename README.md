@@ -5,7 +5,7 @@ Display token/quota usage from **any JSON API** in the VS Code status bar.
 ## What is this?
 
 A generic, multi-provider VSCode extension. Add any quota/usage-style API as a "provider" by supplying:
-1. A **URL** (e.g., `https://api.z.ai/api/coding/paas/v4`)
+1. A **URL** (e.g., `https://api.example.com/v1/usage`)
 2. An **API key** (stored securely in VSCode SecretStorage)
 
 A Claude Code skill analyzes the first response and generates a **JSONPath mapping** that tells the extension which fields are "used / total / percent / reset time".
