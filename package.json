@@ -2,7 +2,7 @@
   "name": "custom-api-usage",
   "displayName": "Custom API Usage",
   "description": "Display token/quota usage from any JSON API in the VSCode status bar",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "publisher": "custom-api-usage",
   "license": "MIT",
   "engines": { "vscode": "^1.85.0" },
@@ -33,7 +33,8 @@
       { "command": "customApiUsage.reorderProviders", "title": "Custom API Usage: Reorder Providers" },
       { "command": "customApiUsage.removeProvider",   "title": "Custom API Usage: Remove Provider" },
       { "command": "customApiUsage.exportMappings",   "title": "Custom API Usage: Export Mappings" },
-      { "command": "customApiUsage.importMappings",   "title": "Custom API Usage: Import Mappings" }
+      { "command": "customApiUsage.importMappings",   "title": "Custom API Usage: Import Mappings" },
+      { "command": "customApiUsage.providerMenu",     "title": "Custom API Usage: Provider Menu" }
     ]
   }
 }

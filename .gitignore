@@ -62,3 +62,4 @@ tmp/
 # (these live in ~/.custom-api-usage/ outside the repo, but keep as safety net)
 mappings.json
 raw/
+RELEASE-NOTES-v0.1.0.md
