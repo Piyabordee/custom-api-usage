@@ -3,6 +3,7 @@ const path = require('node:path');
 const os = require('node:os');
 const providers = require('./providers');
 const { fetchAndCache, extract, renderStatusBar } = require('./fetcher');
+const { installSkill } = require('./skill-installer');
 
 const CUSTOM_DIR = path.join(os.homedir(), '.custom-api-usage');
 const PREFIX = 'customApiUsage';
@@ -449,6 +450,62 @@ ${cards}
       providers.save(CUSTOM_DIR, parsed);
       await rebuildFromDisk(context);
       vscode.window.showInformationMessage(`custom-api-usage: ${parsed.providers.length} provider(s) imported. Re-enter API keys for each.`);
+    }),
+
+    vscode.commands.registerCommand(`${PREFIX}.installCompanionSkill`, async () => {
+      // Ask user: install to user-level (~/.claude/skills/...) or project-level (<workspace>/.claude/skills/...)
+      const target = await vscode.window.showQuickPick(
+        [
+          { label: '$(home) User (all projects)', description: '~/.claude/skills/custom-api-usage-analyze/', target: 'user' },
+          { label: '$(folder) This workspace', description: '.claude/skills/custom-api-usage-analyze/ in the current workspace', target: 'project' }
+        ],
+        { placeHolder: 'Where should the companion skill be installed?' }
+      );
+      if (!target) return;
+
+      let destDir;
+      if (target.target === 'user') {
+        destDir = path.join(os.homedir(), '.claude', 'skills', 'custom-api-usage-analyze');
+      } else {
+        const folders = vscode.workspace.workspaceFolders;
+        if (!folders || folders.length === 0) {
+          vscode.window.showErrorMessage('No workspace folder open. Open a folder first, or pick "User" instead.');
+          return;
+        }
+        destDir = path.join(folders[0].uri.fsPath, '.claude', 'skills', 'custom-api-usage-analyze');
+      }
+
+      const sourceDir = path.join(context.extensionPath, 'skill');
+      // If dest already has content, ask before overwriting
+      let overwrite = false;
+      try {
+        const existing = await require('node:fs/promises').readdir(destDir);
+        if (existing.length > 0) {
+          const choice = await vscode.window.showWarningMessage(
+            `Skill already installed at ${destDir}. Overwrite with the version bundled in this extension?`,
+            { modal: true },
+            'Overwrite'
+          );
+          if (choice !== 'Overwrite') return;
+          overwrite = true;
+        }
+      } catch {
+        // destDir does not exist — proceed without overwrite prompt
+      }
+
+      try {
+        const result = await installSkill({ sourceDir, destDir, overwrite });
+        if (result.skipped) {
+          vscode.window.showInformationMessage(`custom-api-usage: skill already installed at ${destDir}.`);
+        } else {
+          vscode.window.showInformationMessage(
+            `custom-api-usage: companion skill installed to ${destDir}. ` +
+            `Restart Claude Code, then run /custom-api-usage-analyze <id>.`
+          );
+        }
+      } catch (err) {
+        vscode.window.showErrorMessage(`Skill install failed: ${err.message}`);
+      }
     })
   );
 }

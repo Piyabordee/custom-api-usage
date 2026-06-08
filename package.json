@@ -34,6 +34,7 @@
       { "command": "customApiUsage.removeProvider",   "title": "Custom API Usage: Remove Provider" },
       { "command": "customApiUsage.exportMappings",   "title": "Custom API Usage: Export Mappings" },
       { "command": "customApiUsage.importMappings",   "title": "Custom API Usage: Import Mappings" },
+      { "command": "customApiUsage.installCompanionSkill", "title": "Custom API Usage: Install Companion Skill" },
       { "command": "customApiUsage.providerMenu",     "title": "Custom API Usage: Provider Menu" }
     ]
   }
