@@ -28,10 +28,11 @@ Existing AI-usage extensions are hardcoded to one provider. This one is generic 
 ## Setup
 
 1. Install the extension
-2. Run **Custom API Usage: Add Provider**
+2. Run **Custom API Usage: Add Provider** — first fetch happens automatically
 3. Enter label, URL, API key
-4. Run `/custom-api-usage-analyze` in Claude Code to generate the mapping
-5. Status bar updates automatically
+4. Run **Custom API Usage: Install Companion Skill** (one-time, picks user or workspace scope)
+5. Restart Claude Code, then run `/custom-api-usage-analyze <id>` to generate the mapping
+6. Status bar updates automatically
 
 ## Commands
 
@@ -54,7 +55,16 @@ Existing AI-usage extensions are hardcoded to one provider. This one is generic 
 
 ## Skill
 
-See [`.claude/skills/custom-api-usage-analyze/SKILL.md`](.claude/skills/custom-api-usage-analyze/SKILL.md).
+The analyzer skill is bundled in the extension and installed into Claude Code on demand.
+
+**Install:**
+1. Run **Custom API Usage: Install Companion Skill** from the command palette
+2. Choose **User** (available in all projects) or **This workspace** (scoped to current folder)
+3. Restart Claude Code
+
+**Use:** `/custom-api-usage-analyze <provider-id>` — reads the raw cached response, asks 2-3 questions, writes the mapping.
+
+The skill source is also in the repo at [`.claude/skills/custom-api-usage-analyze/SKILL.md`](.claude/skills/custom-api-usage-analyze/SKILL.md) for users who prefer manual install.
 
 ## License
 
