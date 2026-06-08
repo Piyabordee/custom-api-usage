@@ -2,6 +2,7 @@ const vscode = require('vscode');
 const path = require('node:path');
 const os = require('node:os');
 const fs = require('node:fs');
+const fsp = require('node:fs/promises');
 const providers = require('./providers');
 const { fetchAndCache, extract, renderStatusBar } = require('./fetcher');
 const { installSkill } = require('./skill-installer');
@@ -332,19 +333,13 @@ ${cards}
         getApiKey: (pid) => providers.getApiKey(pid),
         fetchAndCache
       });
-      if (!primeResult.ok) {
-        vscode.window.showWarningMessage(
-          `custom-api-usage: provider "${label}" added, but first fetch failed: ${primeResult.error}. ` +
-          `Use Refresh to retry after fixing credentials.`
-        );
-      }
 
       // Try to fetch raw so the skill has something to analyze
       vscode.window.showInformationMessage(
         primeResult.ok
           ? `custom-api-usage: provider "${label}" added. ` +
             `Now run /custom-api-usage-analyze ${id} in Claude Code to generate the mapping.`
-          : `custom-api-usage: provider "${label}" added, but raw fetch failed. ` +
+          : `custom-api-usage: provider "${label}" added, but first fetch failed: ${primeResult.error}. ` +
             `Fix credentials and Refresh, then run /custom-api-usage-analyze ${id}.`
       );
 
@@ -511,7 +506,7 @@ ${cards}
       // If dest already has content, ask before overwriting
       let overwrite = false;
       try {
-        const existing = await require('node:fs/promises').readdir(destDir);
+        const existing = await fsp.readdir(destDir);
         if (existing.length > 0) {
           const choice = await vscode.window.showWarningMessage(
             `Skill already installed at ${destDir}. Overwrite with the version bundled in this extension?`,
