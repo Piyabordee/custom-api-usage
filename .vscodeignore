@@ -1,7 +1,11 @@
 .vscode/**
 .remember/**
+.claude/**
+docs/**
 .gitignore
 .vscodeignore
 test/**
-docs/superpowers/plans/**
 *.log
+# Note: node_modules is intentionally NOT ignored — vsce re-includes declared
+# dependencies from package.json automatically. Adding node_modules/** here
+# would also strip transitive deps.
