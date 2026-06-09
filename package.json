@@ -2,7 +2,7 @@
   "name": "custom-api-usage",
   "displayName": "Custom API Usage",
   "description": "Display token/quota usage from any JSON API in the VSCode status bar",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "publisher": "custom-api-usage",
   "license": "MIT",
   "engines": { "vscode": "^1.85.0" },
